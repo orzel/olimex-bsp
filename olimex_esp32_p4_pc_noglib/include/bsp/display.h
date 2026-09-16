@@ -57,7 +57,6 @@ extern "C" {
  */
 typedef enum {
     BSP_HDMI_RES_NONE = 0,
-    BSP_HDMI_RES_640x480,   /*!< 640x480@60HZ   */
     BSP_HDMI_RES_800x600,   /*!< 800x600@60HZ   */
     BSP_HDMI_RES_1024x768,  /*!< 1024x768@60HZ  */
     BSP_HDMI_RES_1280x720,  /*!< 1280x720@60HZ  */

@@ -920,7 +920,6 @@ _BSP HDMI resolution types._
 ```c
 enum bsp_hdmi_resolution_t {
     BSP_HDMI_RES_NONE = 0,
-    BSP_HDMI_RES_640x480,
     BSP_HDMI_RES_800x600,
     BSP_HDMI_RES_1024x768,
     BSP_HDMI_RES_1280x720,

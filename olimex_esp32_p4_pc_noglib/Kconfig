@@ -113,8 +113,6 @@ menu "Olimex ESP32-P4-PC BSP"
             help
                 Select the HDMI resolution.
 
-            config BSP_LCD_HDMI_640x480_60HZ
-                bool "640x480@60HZ"
             config BSP_LCD_HDMI_800x600_60HZ
                 bool "800x600@60HZ"
             config BSP_LCD_HDMI_1280x720_60HZ

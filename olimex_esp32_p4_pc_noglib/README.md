@@ -20,7 +20,6 @@ Based on the ESP32-P4 chip, featuring a dual-core 400 MHz RISC-V processor bundl
 Configuration in `menuconfig`.
 
 Selection LCD display `Olimex ESP32-P4-PC BSP --> Display --> Select HDMI resolution`
-    - 640x480@60HZ
     - 800x600@60HZ
     - 1280x720@60HZ
     - 1280x800@60HZ

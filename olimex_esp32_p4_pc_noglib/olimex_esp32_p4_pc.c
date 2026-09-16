@@ -71,48 +71,6 @@ static esp_ldo_channel_handle_t disp_phy_pwr_chan = NULL;
         .gpio_cfg = BSP_I2S_GPIO_CFG,                                                                 \
     }
 
-
-// those are not in official lt8912b, but still, i want them
-
-#define ESP_LCD_LT8912B_VIDEO_TIMING_640x480_60Hz() \
-    { \
-        .hfp = 16, \
-        .hs = 96, \
-        .hbp = 48, \
-        .hact = 640, \
-        .htotal = 800, \
-        .vfp = 10, \
-        .vs = 2, \
-        .vbp = 33, \
-        .vact = 480, \
-        .vtotal = 525, \
-        .h_polarity = 0, \
-        .v_polarity = 0, \
-        .vic = 1, \
-        .aspect_ratio = LT8912B_ASPECT_RATION_4_3, \
-        .pclk_mhz = 25, \
-    }
-
-#define LT8912B_640x480_PANEL_60HZ_DPI_CONFIG_WITH_FBS(NUM_FBS) \
-    { \
-        .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT, \
-        .dpi_clock_freq_mhz = 25.175f, \
-        .virtual_channel = 0, \
-        .in_color_format = LCD_COLOR_FMT_RGB888, \
-        .num_fbs = NUM_FBS, \
-        .video_timing = { \
-            .h_size = 640, \
-            .v_size = 480, \
-            .hsync_back_porch = 48, \
-            .hsync_pulse_width = 96, \
-            .hsync_front_porch = 16, \
-            .vsync_back_porch = 33, \
-            .vsync_pulse_width = 2, \
-            .vsync_front_porch = 10, \
-        }, \
-        .flags.disable_lp = true, \
-    }
-
 esp_err_t bsp_i2c_init(void)
 {
     /* I2C was initialized before */
@@ -563,7 +521,6 @@ esp_err_t bsp_display_new_with_handles(const bsp_display_config_t *config, bsp_l
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c(i2c_handle, &io_config_avi, &io_avi));
 
     esp_lcd_dpi_panel_config_t dpi_configs[] = {
-        LT8912B_640x480_PANEL_60HZ_DPI_CONFIG_WITH_FBS(CONFIG_BSP_LCD_DPI_BUFFER_NUMS),
         LT8912B_800x600_PANEL_60HZ_DPI_CONFIG_WITH_FBS(CONFIG_BSP_LCD_DPI_BUFFER_NUMS),
         LT8912B_1024x768_PANEL_60HZ_DPI_CONFIG_WITH_FBS(CONFIG_BSP_LCD_DPI_BUFFER_NUMS),
         LT8912B_1280x720_PANEL_60HZ_DPI_CONFIG_WITH_FBS(CONFIG_BSP_LCD_DPI_BUFFER_NUMS),
@@ -578,7 +535,6 @@ esp_err_t bsp_display_new_with_handles(const bsp_display_config_t *config, bsp_l
 #endif
 
     const esp_lcd_panel_lt8912b_video_timing_t video_timings[] = {
-        ESP_LCD_LT8912B_VIDEO_TIMING_640x480_60Hz(),
         ESP_LCD_LT8912B_VIDEO_TIMING_800x600_60Hz(),
         ESP_LCD_LT8912B_VIDEO_TIMING_1024x768_60Hz(),
         ESP_LCD_LT8912B_VIDEO_TIMING_1280x720_60Hz(),
@@ -594,35 +550,30 @@ esp_err_t bsp_display_new_with_handles(const bsp_display_config_t *config, bsp_l
 
     /* DPI config */
     switch (config->hdmi_resolution) {
-    case BSP_HDMI_RES_640x480:
-        ESP_LOGI(TAG, "HDMI configuration for 640x480@60HZ");
+    case BSP_HDMI_RES_800x600:
+        ESP_LOGI(TAG, "HDMI configuration for 800x600@60HZ");
         vendor_config.mipi_config.dpi_config = &dpi_configs[0];
         memcpy(&vendor_config.video_timing, &video_timings[0], sizeof(esp_lcd_panel_lt8912b_video_timing_t));
         break;
-    case BSP_HDMI_RES_800x600:
-        ESP_LOGI(TAG, "HDMI configuration for 800x600@60HZ");
+    case BSP_HDMI_RES_1024x768:
+        ESP_LOGI(TAG, "HDMI configuration for 1024x768@60HZ");
         vendor_config.mipi_config.dpi_config = &dpi_configs[1];
         memcpy(&vendor_config.video_timing, &video_timings[1], sizeof(esp_lcd_panel_lt8912b_video_timing_t));
         break;
-    case BSP_HDMI_RES_1024x768:
-        ESP_LOGI(TAG, "HDMI configuration for 1024x768@60HZ");
+    case BSP_HDMI_RES_1280x720:
+        ESP_LOGI(TAG, "HDMI configuration for 1280x720@60HZ");
         vendor_config.mipi_config.dpi_config = &dpi_configs[2];
         memcpy(&vendor_config.video_timing, &video_timings[2], sizeof(esp_lcd_panel_lt8912b_video_timing_t));
         break;
-    case BSP_HDMI_RES_1280x720:
-        ESP_LOGI(TAG, "HDMI configuration for 1280x720@60HZ");
+    case BSP_HDMI_RES_1280x800:
+        ESP_LOGI(TAG, "HDMI configuration for 1280x800@60HZ");
         vendor_config.mipi_config.dpi_config = &dpi_configs[3];
         memcpy(&vendor_config.video_timing, &video_timings[3], sizeof(esp_lcd_panel_lt8912b_video_timing_t));
         break;
-    case BSP_HDMI_RES_1280x800:
-        ESP_LOGI(TAG, "HDMI configuration for 1280x800@60HZ");
-        vendor_config.mipi_config.dpi_config = &dpi_configs[4];
-        memcpy(&vendor_config.video_timing, &video_timings[4], sizeof(esp_lcd_panel_lt8912b_video_timing_t));
-        break;
     case BSP_HDMI_RES_1920x1080:
         ESP_LOGI(TAG, "HDMI configuration for 1920x1080@30HZ");
-        vendor_config.mipi_config.dpi_config = &dpi_configs[5];
-        memcpy(&vendor_config.video_timing, &video_timings[5], sizeof(esp_lcd_panel_lt8912b_video_timing_t));
+        vendor_config.mipi_config.dpi_config = &dpi_configs[4];
+        memcpy(&vendor_config.video_timing, &video_timings[4], sizeof(esp_lcd_panel_lt8912b_video_timing_t));
         break;
     default:
         ESP_LOGE(TAG, "Unsupported display type (%d)", config->hdmi_resolution);
@@ -715,10 +666,6 @@ static lv_display_t *bsp_display_lcd_init(const bsp_display_cfg_t *cfg)
     uint32_t display_hres = 0;
     uint32_t display_vres = 0;
     switch (cfg->hw_cfg.hdmi_resolution) {
-    case BSP_HDMI_RES_640x480:
-        display_hres = 640;
-        display_vres = 480;
-        break;
     case BSP_HDMI_RES_800x600:
         display_hres = 800;
         display_vres = 600;
@@ -804,9 +751,7 @@ lv_display_t *bsp_display_start(void)
         .buffer_size = BSP_LCD_DRAW_BUFF_SIZE,
         .double_buffer = BSP_LCD_DRAW_BUFF_DOUBLE,
         .hw_cfg = {
-#if CONFIG_BSP_LCD_HDMI_640x480_60HZ
-            .hdmi_resolution = BSP_HDMI_RES_640x480,
-#elif CONFIG_BSP_LCD_HDMI_800x600_60HZ
+#if CONFIG_BSP_LCD_HDMI_800x600_60HZ
             .hdmi_resolution = BSP_HDMI_RES_800x600,
 #elif CONFIG_BSP_LCD_HDMI_1280x720_60HZ
             .hdmi_resolution = BSP_HDMI_RES_1280x720,
@@ -899,8 +844,6 @@ esp_err_t bsp_usb_host_start(bsp_usb_host_power_mode_t mode, bool limit_500mA)
     const usb_host_config_t host_config = {
         .skip_phy_setup = false,
         .intr_flags = ESP_INTR_FLAG_LEVEL1,
-//        .root_port_fsls_only = true,
-//        .peripheral_map = BIT1,
     };
     BSP_ERROR_CHECK_RETURN_ERR(usb_host_install(&host_config));
 
