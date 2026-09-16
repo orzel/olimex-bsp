@@ -20,5 +20,7 @@ dependencies:
     - if: idf_version >=6.0
     version: ^1.0.0
 description: Board Support Package (BSP) for Olimex ESP32-P4-PC
+tags:
+  bsp
 targets:
 - esp32p4
