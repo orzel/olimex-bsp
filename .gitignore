@@ -1,0 +1,27 @@
+# generic
+*.orig
+*.pyc
+*.diff
+*.save
+*.old
+core
+core.*
+*~
+*.ignore
+*.bak
+*-backups
+diff
+.~lock.*#
+build
+codeviz.*
+
+# vim
+.*.swp
+.swp
+tags
+
+# esp-idf
+sdkconfig
+managed_components
+*.lock
+
